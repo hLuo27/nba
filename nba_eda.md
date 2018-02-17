@@ -1,0 +1,121 @@
+---
+title: "Exploratory Data Analaysis with NBA Dataset"
+author: "Hubert Luo"
+date: "February 16, 2018"
+output: github_document
+---
+
+```{r}
+dat <- read.csv('nba2017-players.csv', stringsAsFactors = FALSE)
+# dimensions (# of rows, # of columns)
+dim(dat)
+# display first few rows
+head(dat)
+# check the structure
+str(dat, vec.len = 1)
+
+#Display the last 5 rows of the data.
+tail(dat,5L)
+
+#Display those rows associated to players having height less than 70 inches tall.
+show(dat[dat$height<70,])
+
+#Display the names and salaries of centres with over 10 years of playing experience
+show(dat[dat$position=='C' & dat$experience > 10,c('player','salary')])
+
+#Create a data frame ucla with the data of players from college UCLA ("University of California, Los Angeles").
+ucla <- data.frame(dat[dat$college == "University of California, Los Angeles",])
+
+#Create a data frame rookies with those players with 0 years of experience.
+rookies <- data.frame(dat[dat$experience == 0,])
+
+#Create a data frame rookie_centers with the data of Center rookie players.
+rookie_centres <- data.frame(rookies[rookies$position == 'C',])
+
+#Create a data frame top_players for players with more than 50 games and more than 300 minutes played.
+top_players <- dat[(dat$games > 50) & (dat$minutes > 300),]
+
+#What's the largest height value?
+max(dat$height)
+
+#What's the minimum height value?
+min(dat$height)
+
+#What's the overall average height?
+mean(dat$height)
+
+#Who is the tallest player?
+dat[dat$height == max(dat$height),'player']
+  
+#Who is the shortest player?
+dat[dat$height == min(dat$height),'player']
+
+#Which are the unique teams?
+unique(dat$team)
+
+#How many different teams?
+length(unique(dat$team))
+
+#Who is the oldest player?
+dat[dat$age == max(dat$age),'player']
+
+#What is the median salary of all players?
+median(dat$salary)
+
+#What is the median salary of the players with 10 years of experience or more?
+median(dat[dat$experience >= 10, 'salary'])
+  
+#What is the median salary of Shooting Guards (SG) and Point Guards (PG)?
+median(dat[(dat$position == 'PG') | (dat$position == 'SG'),'salary'])
+
+#What is the median salary of Power Forwards (PF), 29 years or older, and 74 inches tall or less?
+median(dat[(dat$position == 'PF') & (dat$age >= 29) & (dat$height <= 74),'salary'])
+
+#How many players are from "University of California, Berkeley"?
+nrow(dat[dat$college == "University of California, Berkeley",])
+
+#Are there any players with weight greater than 260 pounds? If so how many and who are they?
+nrow(dat[dat$weight > 260,])
+dat[dat$weight > 260,'player']
+
+#How many players did not attend a college in the US?
+nrow(dat[dat$college == "",])
+
+#Who is the player with the maximum rate of points per minute?
+dat[dat$points/dat$minutes == max(dat$points/dat$minutes),'player']
+
+#Who is the player with the maximum rate of 3 pointers per minute?
+dat[dat$points3/dat$minutes == max(dat$points3/dat$minutes),'player']
+
+#Create a data frame tor with the name, height, weight of Toronto Raptors (TOR)
+tor <- data.frame(dat[dat$team == 'TOR',c('player','height','weight')])
+
+#Display the data in tor sorted by height in increasing order
+show(tor[order(tor$height),])
+
+#Display the data in tor by weight in decreasing order
+show(tor[rev(order(tor$height)),])
+
+#Display the player name, team, and salary, of the top 5 highest-paid players
+show(dat[rev(order(dat$salary))[1:5],c("player","team","salary")])
+
+#Display the player name, team, and points3, of the top 10 three-point players
+show(dat[rev(order(dat$points3))[1:10],c("player","team","points3")])
+
+#Create a data frame with the average height, average weight, and average age, grouped by position
+aggregate(dat[,c("height","weight","age")],by = list(dat$age),FUN = mean)
+
+#Create a data frame with the average height, average weight, and average age, grouped by team
+aggregate(dat[,c("height","weight","age")],by = list(dat$team),FUN = mean)
+
+#Create a data frame with the average height, average weight, and average age, grouped by team and position.
+aggregate(dat[,c("height","weight","age")],by = list(dat$team, dat$position),FUN = mean)
+
+#Difficult: Create a data frame with the minimum salary, median salary, mean salary, and maximum salary, grouped by team and position.
+nba_summary <- data.frame(aggregate(dat[,c("salary")],by = list(dat$team, dat$position),FUN = min), 
+           aggregate(dat[,c("salary")],by = list(dat$team, dat$position),FUN = median),
+           aggregate(dat[,c("salary")],by = list(dat$team, dat$position),FUN = mean),
+           aggregate(dat[,c("salary")],by = list(dat$team, dat$position),FUN = max))[,c(1,2,3,6,9,12)]
+colnames(nba_summary) <- c("Team","Position","Min Salary", "Median Salary", "Mean Salary", "Max Salary")
+nba_summary
+```
