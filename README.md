@@ -1,2 +1,2 @@
 # nba
-Bootstrap, Simple Random Sampling, and Exploratory Data Analysis of NBA players in the 2016-2017 season.
+Bootstrap/Jackknife Resampling, Random Sampling Simulations, and Exploratory Data Analysis of data about NBA players from the 2016-2017 season.
