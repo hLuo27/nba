@@ -5,6 +5,8 @@ date: "February 16, 2018"
 output: github_document
 ---
 
+##Data Import/Dataframe Info
+
 ```{r}
 dat <- read.csv('nba2017-players.csv', stringsAsFactors = FALSE)
 # dimensions (# of rows, # of columns)
@@ -13,17 +15,20 @@ dim(dat)
 head(dat)
 # check the structure
 str(dat, vec.len = 1)
-
 #Display the last 5 rows of the data.
 tail(dat,5L)
+```
 
+##Dataframe Manipulation
+
+```{r}
 #Display those rows associated to players having height less than 70 inches tall.
 show(dat[dat$height<70,])
 
 #Display the names and salaries of centres with over 10 years of playing experience
 show(dat[dat$position=='C' & dat$experience > 10,c('player','salary')])
 
-#Create a data frame ucla with the data of players from college UCLA ("University of California, Los Angeles").
+#Create a data frame UCLA with the data of players from college UCLA ("University of California, Los Angeles").
 ucla <- data.frame(dat[dat$college == "University of California, Los Angeles",])
 
 #Create a data frame rookies with those players with 0 years of experience.
@@ -101,7 +106,11 @@ show(dat[rev(order(dat$salary))[1:5],c("player","team","salary")])
 
 #Display the player name, team, and points3, of the top 10 three-point players
 show(dat[rev(order(dat$points3))[1:10],c("player","team","points3")])
+```
 
+##Grouping the Data
+
+```{r}
 #Create a data frame with the average height, average weight, and average age, grouped by position
 aggregate(dat[,c("height","weight","age")],by = list(dat$age),FUN = mean)
 
@@ -118,4 +127,16 @@ nba_summary <- data.frame(aggregate(dat[,c("salary")],by = list(dat$team, dat$po
            aggregate(dat[,c("salary")],by = list(dat$team, dat$position),FUN = max))[,c(1,2,3,6,9,12)]
 colnames(nba_summary) <- c("Team","Position","Min Salary", "Median Salary", "Mean Salary", "Max Salary")
 nba_summary
+```
+
+##Correlation between Variables
+
+```{r}
+library(corrplot)
+quant_dat <- dat[,-c(1:3,8)] #Only keep quantiative data for analysis (numeric/integer data type)
+M <- cor(quant_dat) #Correlation matrix
+corrplot(M, method = "circle")
+corrplot(M, method = "ellipse")
+corrplot.mixed(M, lower="number",upper="pie",lower.col = "black",number.cex = 0.7, tl.cex = 0.5)
+corrplot(M, method = "shade", order = "AOE")
 ```
