@@ -1,0 +1,48 @@
+---
+title: "NBA Jackknife Resampling"
+author: "Hubert Luo"
+date: "February 18, 2018"
+output: github_document
+---
+
+##Jackknife Resampling: Points
+
+```{r}
+dat <- read.csv('nba2017-players.csv', stringsAsFactors = FALSE)
+dat_points <- na.omit(dat$points)
+n = 100 #Sample size
+
+#Take simple random sample of size n
+srs = sample(dat_points,n)
+
+#Remove 1 observation with jackknife
+jackknifeSamples = numeric()
+for (i in 1:n) {
+  jackknifeSamples = c(jackknifeSamples, mean(srs[-i]))
+}
+
+#Alternatively, we can use the jackknife function in the bootstrap package
+library(bootstrap)
+jackknife(srs, theta = mean) #Returns a list consisting of resampling standard error, bias, and values
+
+#Remove 2 observations with jackknife
+jackknifeSamples2 = numeric()
+for (i in 1:n) {
+  for (j in (i+1):n) {
+    jackknifeSamples2 = c(jackknifeSamples2, mean(srs[-c(i,j)]))
+  }
+}
+```
+
+##Compare Accuracies
+
+```{r}
+mean(dat_points) #Population 
+mean(srs) #Simple Random Sample
+mean(jackknifeSamples) #Jackknife Resampling with 1 removal
+mean(jackknifeSamples2) #Jackknife Resampling with 2 removals
+
+sd(dat_points)
+sd(srs)
+sd(jackknifeSamples)
+```

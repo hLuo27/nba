@@ -1,17 +1,45 @@
 ---
-title: "NBA Dataset with Bootstrap"
+title: "NBA Bootstrap Resampling"
 author: "Hubert Luo"
-date: "February 16, 2018"
+date: "February 17, 2018"
 output: github_document
 ---
 
-##Sampling
+##Boostrap Resampling: Points
+
+```{r}
+dat <- read.csv('nba2017-players.csv', stringsAsFactors = FALSE)
+dat_points <- na.omit(dat$points)
+n = 100 #Sample size
+
+#Take simple random sample of size n
+srs = sample(dat_points,n)
+
+#Take boostrap sample by repeating each entry number of times needed to approximate population
+bootstrapSamples = numeric()
+numRepeats = round(length(dat_points)/n)
+for (i in 1:n){
+  bootstrapSamples = c(bootstrapSamples, rep(srs[i],numRepeats))
+}
+```
+
+##Compare Accuracies
+
+```{r}
+mean(dat_points) #Population 
+mean(srs) #Simple Random Sample
+mean(bootstrapSamples) #Bootstrap Resampling
+
+sd(dat_points)
+sd(srs)
+sd(bootstrapSamples)
+```
+
+##Simple Random Sampling: All Parameters
 
 We will take a sample of 100 players and try to estimate population parameters (for all 441 NBA players) from their sample statistics.
 
 ```{r}
-dat <- read.csv('nba2017-players.csv', stringsAsFactors = FALSE)
-
 numeric_dat <- dat[, -c(1,2,3,8)] #Keep the numeric variables to calculate population parameters
 pop_params <- numeric() #Create empty vector to store population parameters
 for (sample_var in 1:(ncol(numeric_dat))){
