@@ -1,0 +1,13 @@
+---
+title: "NBA Principal Component Analysis"
+author: "Hubert Luo"
+date: "February 19, 2018"
+output: html_document
+---
+
+
+```{r}
+dat <- read.csv('nba2017-players.csv', stringsAsFactors = FALSE)
+quant_dat = dat[,-c(1:3,8)] #Only keep quantiative data for pca (numeric/integer data type)
+prcomp(quant_dat, scale. = TRUE)
+```

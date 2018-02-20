@@ -34,15 +34,22 @@ for (i in 1:n) {
 }
 ```
 
+##Compare Samples from Jackknfie Resampling
+```{r}
+plot(jackknifeSamples, xlab = "Sample", ylab = "Average Points", main = "Samples from Jackknife")
+plot(jackknifeSamples2, xlab = "Sample", ylab = "Average Points", main = "Samples from Jackknife with Two Removals")
+```
+
 ##Compare Accuracies
 
 ```{r}
 mean(dat_points) #Population 
 mean(srs) #Simple Random Sample
-mean(jackknifeSamples) #Jackknife Resampling with 1 removal
-mean(jackknifeSamples2) #Jackknife Resampling with 2 removals
+mean(jackknifeSamples) #Jackknife Resampling with 1 removal - note that this will be very close to the population parameter (Bias = 0) 
+mean(jackknifeSamples2) 
 
 sd(dat_points)
 sd(srs)
 sd(jackknifeSamples)
+sd(jackknifeSamples2)
 ```
