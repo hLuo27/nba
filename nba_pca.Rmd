@@ -5,6 +5,7 @@ date: "February 20, 2018"
 output: html_document
 ---
 
+##Run PCA and List Results
 
 ```{r}
 dat <- read.csv('nba2017-players.csv', stringsAsFactors = FALSE)
@@ -19,3 +20,16 @@ barplot(eigenvaluesdf$eigenvalues, names.arg = eigenvaluesdf$PC, xlab = "Princip
 loadings <- pca_nba$rotation #Weights of each PC
 round(loadings,3)
 ```
+
+##Proportion of Variance
+
+```{r}
+#Add columns to evaluate variance of PC's in terms of percentages and cumulative percentages
+eigenvaluesdf[,"Percentage"] <- round(eigenvaluesdf$eigenvalues/sum(eigenvaluesdf$eigenvalues)*100,2)
+eigenvaluesdf[,"Cumulative_%"] <- cumsum(eigenvaluesdf$Percentage)
+eigenvaluesdf
+
+barplot(eigenvaluesdf$Percentage,names.arg = eigenvaluesdf$PC, main = "Bar Chart of Eigenvalues", xlab = "Principal Component", ylab = "Eigenvalue")
+```
+
+Note that almost all of the variability (83%) is captured by the first three principal components. Almost half of the variability (47%) is captured in the first principal component.
