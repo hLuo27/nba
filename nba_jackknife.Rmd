@@ -5,6 +5,10 @@ date: "February 18, 2018"
 output: github_document
 ---
 
+```{r}
+library(bootstrap)
+```
+
 ##Jackknife Resampling: Points
 
 ```{r}
@@ -22,7 +26,6 @@ for (i in 1:n) {
 }
 
 #Alternatively, we can use the jackknife function in the bootstrap package
-library(bootstrap)
 jackknife(srs, theta = mean) #Returns a list consisting of resampling standard error, bias, and values
 
 #Remove 2 observations with jackknife

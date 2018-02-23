@@ -3,4 +3,4 @@ Principal Component Analysis, Bootstrap/Jackknife Resampling, Random Sampling Si
 
 -----
 
-Packages Used: ggplot2, corrplot, bootstrap
+Packages Used: ggplot2, dplyr, corrplot, readr, bootstrap

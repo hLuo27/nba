@@ -3,6 +3,12 @@ Exploratory Data Analaysis with NBA Dataset
 Hubert Luo
 February 16, 2018
 
+``` r
+library(corrplot)
+```
+
+    ## corrplot 0.84 loaded
+
 Data Import/Dataframe Info
 --------------------------
 
@@ -732,35 +738,27 @@ Correlation between Variables
 -----------------------------
 
 ``` r
-library(corrplot)
-```
-
-    ## Warning: package 'corrplot' was built under R version 3.3.3
-
-    ## corrplot 0.84 loaded
-
-``` r
 quant_dat <- dat[,-c(1:3,8)] #Only keep quantiative data for analysis (numeric/integer data type)
 M <- cor(quant_dat) #Correlation matrix
 corrplot(M, method = "circle")
 ```
 
-![](nba_eda_files/figure-markdown_github/unnamed-chunk-4-1.png)
+![](nba_eda_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
 ``` r
 corrplot(M, method = "ellipse")
 ```
 
-![](nba_eda_files/figure-markdown_github/unnamed-chunk-4-2.png)
+![](nba_eda_files/figure-markdown_github/unnamed-chunk-5-2.png)
 
 ``` r
 corrplot.mixed(M, lower="number",upper="pie",lower.col = "black",number.cex = 0.7, tl.cex = 0.5)
 ```
 
-![](nba_eda_files/figure-markdown_github/unnamed-chunk-4-3.png)
+![](nba_eda_files/figure-markdown_github/unnamed-chunk-5-3.png)
 
 ``` r
 corrplot(M, method = "shade", order = "AOE")
 ```
 
-![](nba_eda_files/figure-markdown_github/unnamed-chunk-4-4.png)
+![](nba_eda_files/figure-markdown_github/unnamed-chunk-5-4.png)

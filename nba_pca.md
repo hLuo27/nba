@@ -103,4 +103,6 @@ Variables such as points, games, and salary have high PC1's between 0.3 and 0.4,
 biplot(pca_nba, scale = 0.5)
 ```
 
-![](nba_pca_files/figure-markdown_github/unnamed-chunk-5-1.png) This is an example of a biplot, with the arrows scaled to represent their loadings.
+![](nba_pca_files/figure-markdown_github/unnamed-chunk-5-1.png)
+
+This is an example of a biplot, with the arrows scaled to represent their loadings.
