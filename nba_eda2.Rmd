@@ -9,13 +9,121 @@ output: github_document
 library(ggplot2)
 library(dplyr)
 library(readr)
+dat <- read_csv('nba2017-players.csv')
 ```
 
-##Dataframe Manipulation
+##Filtering, Slicing, and Selecting
 
 ```{r}
-dat <- read_csv('nba2017-players.csv')
+#use slice() to subset the data by selecting the first 5 rows.
+slice(dat,1:5)
+#use slice() to subset the data by selecting rows 10, 15, 20, ..., 50.
+slice(dat,2:10*5)
+#use slice() to subset the data by selecting the last 5 rows.
+slice(dat,(nrow(dat)-4):nrow(dat))
+#use filter() to subset those players with height less than 70 inches tall.
+filter(dat, height < 70)
+#use filter() to subset rows of Golden State Warriors ('GSW').
+filter(dat, team == "GSW")
+#use filter() to subset rows of GSW centers ('C').
+filter(dat, team == "GSW" & position == "C")
+#use filter() and then select(), to subset rows of lakers ('LAL'), and then display their names.
+select(filter(dat, team == "LAL"),player)
+#use filter() and then select(), to display the name and salary, of GSW point guards
+select(filter(dat, team == "GSW" & position == "PG"), player, salary)
+#find how to select the name, age, and team, of players with more than 10 years of experience, making 10 million dollars or less.
+select(filter(dat, experience > 10 & salary <= 10e6), player, age, team)
+#find how to select the name, team, height, and weight, of rookie players, 20 years old, displaying only the first five occurrences (i.e. rows)
+slice(select(filter(dat, experience == 0 & age == 20), player, team, height, weight),1:5)
+```
 
+##Add New Variables by mutate and Reordering Rows by arrange
+
+```{r}
+gsw <- filter(dat, team == 'GSW')
+gsw <- select(gsw, player, height, weight)
+gsw <- slice(gsw, c(4, 8, 10, 14, 15))
+gsw
+
+gsw2 = mutate(gsw, ht_wt = height/weight)
+gsw2
+
+arrange(gsw, height)
+arrange(gsw,desc(height))
+
+#using the data frame gsw, add a new variable product with the product of height and weight.
+mutate(gsw, product = height*weight)
+
+#create a new data frame gsw3, by adding columns log_height and log_weight with the log transformations of height and weight.
+gsw3 = mutate(gsw, log_height = log(height), log_weight = log(weight))
+
+#use the original data frame to filter() and arrange() those players with height less than 71 inches tall, in increasing order.
+arrange(filter(dat, height < 71),height)
+
+#display the name, team, and salary, of the top-5 highest paid players
+select(slice(arrange(dat, desc(salary)),1:5),c(player, team, salary))
+
+#display the name, team, and points3, of the top 10 three-point players
+select(slice(arrange(dat, desc(points3)),1:10),c(player, team, points3))
+
+#create a data frame gsw_mpg of GSW players, that contains variables for player name, experience, and min_per_game (minutes per game), sorted by min_per_game (in descending order)
+gsw_mpg = arrange(select(mutate(filter(dat,team=="GSW"),min_per_game = minutes/games),c(player, experience, min_per_game)),desc(min_per_game))
+gsw_mpg
+```
+
+###Summarizing values with summarise and Grouped Operations
+
+```{r}
+# average salary of NBA players
+summarise(dat, avg_salary = mean(salary))
+
+# some stats for salary (dplyr)
+summarise(
+  dat, 
+  min = min(salary),
+  median = median(salary),
+  avg = mean(salary),
+  max = max(salary)
+)
+
+# average salary, grouped by team
+summarise(
+  group_by(dat, team),
+  avg_salary = mean(salary)
+)
+
+summarise(
+  group_by(dat, position),
+  avg_salary = mean(salary)
+)
+
+arrange(
+  summarise(
+    group_by(dat, position),
+    avg_height = mean(height),
+    avg_weight = mean(weight)),
+  desc(avg_height)
+)
+
+#use summarise() to get the largest height value.
+summarise(dat,max_height = max(height))
+
+#use summarise() to get the standard deviation of points3.
+summarise(dat,sd_3pt = sd(points3))
+
+#use summarise() and group_by() to display the median of three-points, by team.
+summarise(group_by(dat, team),median_3pt = median(points3))
+
+#display the average triple points by team, in ascending order, of the bottom-5 teams (worst 3pointer teams)
+slice(arrange(summarise(group_by(dat,team),average_3pt = mean(points3)),average_3pt),1:5)
+
+#obtain the mean and standard deviation of age, for Power Forwards, with 5 and 10 years (including) years of experience.
+summarise(filter(dat, position =="PF" & experience>=5 & experience <= 10),average_age = mean(age), sd_age = sd(age))
+```
+
+###More Dataframe Manipulation
+
+```{r}
 #Display those rows associated to players having height less than 70 inches tall.
 show(dat[dat$height<70,])
 
@@ -102,7 +210,7 @@ show(dat[rev(order(dat$salary))[1:5],c("player","team","salary")])
 show(dat[rev(order(dat$points3))[1:10],c("player","team","points3")])
 ```
 
-##Grouping the Data
+###Grouping the Data
 
 ```{r}
 #Create a data frame with the average height, average weight, and average age, grouped by position
@@ -121,4 +229,41 @@ nba_summary <- data.frame(aggregate(dat[,c("salary")],by = list(dat$team, dat$po
            aggregate(dat[,c("salary")],by = list(dat$team, dat$position),FUN = max))[,c(1,2,3,6,9,12)]
 colnames(nba_summary) <- c("Team","Position","Min Salary", "Median Salary", "Mean Salary", "Max Salary")
 nba_summary
+```
+
+###Visualizations with ggplot
+
+```{r scatterplot}
+# scatterplot (option 1)
+ggplot(data = dat) +
+  geom_point(aes(x = points, y = salary))
+```
+
+```{r scatterplot2}
+# scatterplot (option 2)
+ggplot(data = dat, aes(x = points, y = salary)) +
+  geom_point()
+```
+
+```{r coloured_scatterplot}
+# colored scatterplot 
+ggplot(data = dat, aes(x = points, y = salary)) +
+  geom_point(aes(color = position))
+```
+
+```{r size_colour_scatterplot}
+# sized and colored scatterplot 
+ggplot(data = dat, aes(x = points, y = salary)) +
+  geom_point(aes(color = position, size = points3))
+```
+
+```{r transparent_scatterplot}
+ggplot(data = dat, aes(x = points, y = salary)) +
+  geom_point(aes(color = position, size = points3), alpha = 0.7)
+```
+
+```{r gsw_scatterplot}
+#Use the data frame gsw to make a scatterplot of height and weight.
+ggplot(data = gsw, aes(x = height, y = weight)) +
+  geom_point()
 ```
