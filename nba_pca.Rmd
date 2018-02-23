@@ -1,9 +1,13 @@
 ---
 title: "NBA Principal Component Analysis"
 author: "Hubert Luo"
-date: "February 20, 2018"
-output: html_document
+date: "February 22, 2018"
+output: github_document
 ---
+
+```{r}
+library(ggplot2)
+```
 
 ##Run PCA and List Results
 
@@ -33,3 +37,20 @@ barplot(eigenvaluesdf$Percentage,names.arg = eigenvaluesdf$PC, main = "Bar Chart
 ```
 
 Note that almost all of the variability (83%) is captured by the first three principal components. Almost half of the variability (47%) is captured in the first principal component.
+
+##Visualizations
+
+```{r}
+loadingsdf=as.data.frame(loadings)
+ggplot(data = loadingsdf,aes(x=PC1, y= PC2)) +
+  geom_label(label = row.names(loadingsdf)) +
+  ggtitle("PC Plot of NBA Characteristics") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+Variables such as points, games, and salary have high PC1's between 0.3 and 0.4, indicating a strong association with these variables. On the other hand, these variables have a PC2 around 0, indicating less of an associaon between PC2 and these variables. On the other hand, PC2 is rather strongly negatively associated with variables such as height, weight, age, and experience, with values at or below -0.4. This indicates that our variables can be thought of as being in two seperate groups of correlated variables.
+
+```{r}
+biplot(pca_nba, scale = 0.5)
+```
+This is an example of a biplot, with the arrows scaled to represent their loadings.
