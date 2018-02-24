@@ -81,7 +81,7 @@ median(dat[(dat$position == 'PG') | (dat$position == 'SG'),'salary'])
 median(dat[(dat$position == 'PF') & (dat$age >= 29) & (dat$height <= 74),'salary'])
 
 #How many players are from "University of California, Berkeley"?
-nrow(dat[dat$college == "University of California, Berkeley",])
+nrow(na.omit(dat[dat$college == "University of California, Berkeley",]))
 
 #Are there any players with weight greater than 260 pounds? If so how many and who are they?
 nrow(dat[dat$weight > 260,])

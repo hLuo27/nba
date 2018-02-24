@@ -225,7 +225,7 @@ median(dat[(dat$position == 'PF') & (dat$age >= 29) & (dat$height <= 74),'salary
 
 ``` r
 #How many players are from "University of California, Berkeley"?
-nrow(dat[dat$college == "University of California, Berkeley",])
+nrow(na.omit(dat[dat$college == "University of California, Berkeley",]))
 ```
 
     ## [1] 0
