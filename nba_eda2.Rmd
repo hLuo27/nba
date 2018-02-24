@@ -19,7 +19,7 @@ dat <- read_csv('nba2017-players.csv')
 slice(dat,1:5)
 #use slice() to subset the data by selecting rows 10, 15, 20, ..., 50.
 slice(dat,2:10*5)
-#use slice() to subset the data by selecting the last 5 rows.
+#use slice() to subset  the data by selecting the last 5 rows.
 slice(dat,(nrow(dat)-4):nrow(dat))
 #use filter() to subset those players with height less than 70 inches tall.
 filter(dat, height < 70)
