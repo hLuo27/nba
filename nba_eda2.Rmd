@@ -71,7 +71,7 @@ arrange(tor,desc(height))
 tor %>% mutate(product = height*weight) %>% arrange(product) %>% select(player,position,product) %>% slice(1:5)
 
 #create a new data frame gsw3, by adding columns log_height and log_weight with the log transformations of height and weight.
-tor3 = mutate(tor3, log_height = log(height), log_weight = log(weight))
+tor3 = mutate(tor, log_height = log(height), log_weight = log(weight))
 
 #use the original data frame to filter() and arrange() those players with height less than 71 inches tall, in increasing order.
 arrange(filter(dat, height < 71),height)
@@ -115,7 +115,7 @@ summarise(filter(dat, position =="PF" & experience>=5 & experience <= 10),averag
 dat %>% filter(position == "PF" & experience >= 5 & experience <= 10) %>% summarise(average_age = mean(age), sd_age = sd(age))
 ```
 
-###More Dataframe Manipulation Using Basic Commands and "dplyr"" Piped Commands
+###More Dataframe Manipulation
 
 ```{r}
 #Display those rows associated to players having height less than 70 inches tall.
@@ -179,15 +179,15 @@ median(dat$salary)
 dat %>% summarise(median(salary))
 
 #What is the median salary of the players with 10 years of experience or more?
-median(dat[dat$experience >= 10, 'salary'])
+median(dat[dat$experience >= 10, 'salary'][[1]])
 dat %>% filter(experience >= 10) %>% summarise(median(salary))
   
 #What is the median salary of Shooting Guards (SG) and Point Guards (PG)?
-median(dat[(dat$position == 'PG') | (dat$position == 'SG'),'salary'])
+median(dat[(dat$position == 'PG') | (dat$position == 'SG'),'salary'][[1]])
 dat %>% filter(position == 'PG' | position == 'SG') %>% summarise(median(salary))
 
 #What is the median salary of Power Forwards (PF), 29 years or older, and 74 inches tall or less?
-median(dat[(dat$position == 'PF') & (dat$age >= 29) & (dat$height <= 74),'salary'])
+median(dat[(dat$position == 'PF') & (dat$age >= 29) & (dat$height <= 74),'salary'][[1]])
 dat %>% filter(position == 'PG' & age >= 29 & height <= 74) %>% summarise(median(salary))
 
 #How many players are from "University of California, Berkeley"?
@@ -269,7 +269,7 @@ ggplot(data = dat, aes(x = points, y = salary)) +
 ```
 
 ```{r gsw_scatterplot}
-#Use the data frame gsw to make a scatterplot of height and weight.
-ggplot(data = gsw, aes(x = height, y = weight)) +
+#Use the data frame tor to make a scatterplot of height and weight.
+ggplot(data = tor, aes(x = height, y = weight)) +
   geom_point()
 ```
