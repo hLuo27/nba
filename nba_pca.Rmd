@@ -7,6 +7,8 @@ output: github_document
 
 ```{r}
 library(ggplot2)
+library(corrplot)
+library(dplyr)
 ```
 
 ##Run PCA and List Results
@@ -19,7 +21,6 @@ pca_nba <- prcomp(quant_dat, scale. = TRUE)
 eigenvalues <- pca_nba$sdev^2  #Variance of the Principal Component (PC's) is equal to the eigenvalue of the PC
 eigenvaluesdf <- data.frame(1:11, eigenvalues) #Create dataframe of eigenvalues with column for each PC
 names(eigenvaluesdf)[1] <- "PC"
-barplot(eigenvaluesdf$eigenvalues, names.arg = eigenvaluesdf$PC, xlab = "Principal Component", ylab = "Eigenvalue", main = "Eigenvalue of Each PC", col = c("blue","gold"))
 
 loadings <- pca_nba$rotation #Weights of each PC
 round(loadings,3)
@@ -33,17 +34,26 @@ eigenvaluesdf[,"Percentage"] <- round(eigenvaluesdf$eigenvalues/sum(eigenvaluesd
 eigenvaluesdf[,"Cumulative_%"] <- cumsum(eigenvaluesdf$Percentage)
 eigenvaluesdf
 
-barplot(eigenvaluesdf$Percentage,names.arg = eigenvaluesdf$PC, main = "Bar Chart of Eigenvalues", xlab = "Principal Component", ylab = "Eigenvalue")
+ggplot(data = eigenvaluesdf) +
+  geom_col(aes(x = PC, y = Percentage)) +
+  ggtitle(label = "Proportion of Variance of Each PC") +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 Note that almost all of the variability (83%) is captured by the first three principal components. Almost half of the variability (47%) is captured in the first principal component.
 
-##Visualizations
+##More Visualizations
 
 ```{r}
 loadingsdf=as.data.frame(loadings)
 ggplot(data = loadingsdf,aes(x=PC1, y= PC2)) +
   geom_label(label = row.names(loadingsdf)) +
+  ggtitle("PC Plot of NBA Characteristics") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(data = loadingsdf, aes(x = PC1, y = PC2)) +
+  geom_point() +
+  geom_segment(aes(xend = 0, yend = 0)) +
   ggtitle("PC Plot of NBA Characteristics") +
   theme(plot.title = element_text(hjust = 0.5))
 ```

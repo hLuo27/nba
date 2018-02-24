@@ -5,7 +5,25 @@ February 22, 2018
 
 ``` r
 library(ggplot2)
+library(corrplot)
 ```
+
+    ## corrplot 0.84 loaded
+
+``` r
+library(dplyr)
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
 
 Run PCA and List Results
 ------------------------
@@ -18,12 +36,7 @@ pca_nba <- prcomp(quant_dat, scale. = TRUE)
 eigenvalues <- pca_nba$sdev^2  #Variance of the Principal Component (PC's) is equal to the eigenvalue of the PC
 eigenvaluesdf <- data.frame(1:11, eigenvalues) #Create dataframe of eigenvalues with column for each PC
 names(eigenvaluesdf)[1] <- "PC"
-barplot(eigenvaluesdf$eigenvalues, names.arg = eigenvaluesdf$PC, xlab = "Principal Component", ylab = "Eigenvalue", main = "Eigenvalue of Each PC", col = c("blue","gold"))
-```
 
-![](nba_pca_files/figure-markdown_github/unnamed-chunk-2-1.png)
-
-``` r
 loadings <- pca_nba$rotation #Weights of each PC
 round(loadings,3)
 ```
@@ -77,15 +90,18 @@ eigenvaluesdf
     ## 11 11 3.569753e-31       0.00        99.99
 
 ``` r
-barplot(eigenvaluesdf$Percentage,names.arg = eigenvaluesdf$PC, main = "Bar Chart of Eigenvalues", xlab = "Principal Component", ylab = "Eigenvalue")
+ggplot(data = eigenvaluesdf) +
+  geom_col(aes(x = PC, y = Percentage)) +
+  ggtitle(label = "Proportion of Variance of Each PC") +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 ![](nba_pca_files/figure-markdown_github/unnamed-chunk-3-1.png)
 
 Note that almost all of the variability (83%) is captured by the first three principal components. Almost half of the variability (47%) is captured in the first principal component.
 
-Visualizations
---------------
+More Visualizations
+-------------------
 
 ``` r
 loadingsdf=as.data.frame(loadings)
@@ -96,6 +112,16 @@ ggplot(data = loadingsdf,aes(x=PC1, y= PC2)) +
 ```
 
 ![](nba_pca_files/figure-markdown_github/unnamed-chunk-4-1.png)
+
+``` r
+ggplot(data = loadingsdf, aes(x = PC1, y = PC2)) +
+  geom_point() +
+  geom_segment(aes(xend = 0, yend = 0)) +
+  ggtitle("PC Plot of NBA Characteristics") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+![](nba_pca_files/figure-markdown_github/unnamed-chunk-4-2.png)
 
 Variables such as points, games, and salary have high PC1's between 0.3 and 0.4, indicating a strong association with these variables. On the other hand, these variables have a PC2 around 0, indicating less of an associaon between PC2 and these variables. On the other hand, PC2 is rather strongly negatively associated with variables such as height, weight, age, and experience, with values at or below -0.4. This indicates that our variables can be thought of as being in two seperate groups of correlated variables.
 
