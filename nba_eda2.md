@@ -860,47 +860,61 @@ dat %>% group_by(position, team) %>% summarise(min(salary),median(salary),mean(s
 
 ``` r
 # scatterplot (option 1)
-ggplot(data = dat) +
-  geom_point(aes(x = points, y = salary))
+ggplot(data = dat, aes(x = points, y = salary)) +
+  geom_point() + 
+  ggtitle('Relationship between Points and Salary of NBA Players') +
+  geom_smooth(method = lm) +
+  theme_bw()
 ```
 
 ![](nba_eda2_files/figure-markdown_github/scatterplot-1.png)
 
 ``` r
-# scatterplot (option 2)
-ggplot(data = dat, aes(x = points, y = salary)) +
-  geom_point()
-```
-
-![](nba_eda2_files/figure-markdown_github/scatterplot2-1.png)
-
-``` r
 # colored scatterplot 
-ggplot(data = dat, aes(x = points, y = salary)) +
-  geom_point(aes(color = position))
+ggplot(data = dat, aes(x = points, y = salary, color = position)) +
+  geom_point() +
+  ggtitle("Relationship between Points and Salary of NBA Players by Position") +
+  geom_smooth(method = "lm", se = FALSE) #Remove confidence intervals so easier to see lines
 ```
 
 ![](nba_eda2_files/figure-markdown_github/coloured_scatterplot-1.png)
 
 ``` r
 # sized and colored scatterplot 
-ggplot(data = dat, aes(x = points, y = salary)) +
-  geom_point(aes(color = position, size = points3))
+ggplot(data = dat, aes(x = points, y = salary, color = position, size = points3)) +
+  geom_point(alpha = 0.5) +
+  ggtitle("Points and Salaries of NBA Players by Position and Number of 3-Pointers") +
+  theme_gray()
 ```
 
 ![](nba_eda2_files/figure-markdown_github/size_colour_scatterplot-1.png)
 
 ``` r
-ggplot(data = dat, aes(x = points, y = salary)) +
-  geom_point(aes(color = position, size = points3), alpha = 0.7)
-```
-
-![](nba_eda2_files/figure-markdown_github/transparent_scatterplot-1.png)
-
-``` r
 #Use the data frame tor to make a scatterplot of height and weight.
-ggplot(data = tor, aes(x = height, y = weight)) +
-  geom_point()
+ggplot(data = tor, aes(x = height, y = weight, label = player)) +
+  geom_label() + 
+  ggtitle('Toronto Raptors Physical Characteristics') +
+  theme_dark()
 ```
 
 ![](nba_eda2_files/figure-markdown_github/tor_scatterplot-1.png)
+
+``` r
+ggplot(data = dat, aes(x = points, y = salary, color = position)) +
+  facet_grid(.~position) + #Facet by position vertically
+  geom_point(show.legend = FALSE) + #No need for legend since colours seperated by facets and under position header
+  ggtitle('Relationship between Points and Salary for each Position') +
+  geom_smooth(method = lm, show.legend= FALSE) +
+  theme_classic()
+```
+
+![](nba_eda2_files/figure-markdown_github/facet_scatterplot-1.png)
+
+``` r
+ggplot(data = dat, aes(x = weight, y = height)) +
+  facet_grid(.~position) +
+  geom_density2d() +
+  theme_minimal()
+```
+
+![](nba_eda2_files/figure-markdown_github/facet2_scatterplot-1.png)

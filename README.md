@@ -9,7 +9,7 @@ Principal Component Analysis, Bootstrap/Jackknife Resampling, Random Sampling Si
 - [Bootstrap Resampling](nba_bootstrap.md)
 - [Jackknife Resampling](nba_jackknife.md)
 - [Exploratory Data Analysis Part 2 (with dplyr/ggplot2)](nba_eda2.md)
-- [Exploratory Data Analysis Part 1](nba_eda.md)
+- [Exploratory Data Analysis Part 1 (with corrplot)](nba_eda.md)
 
 -----
 
