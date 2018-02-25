@@ -1,5 +1,5 @@
 ---
-title: "Exploratory Data Analaysis 2 with NBA Dataset (Using ggplot and dplyr)"
+title: "Exploratory Data Analaysis 2 with NBA Dataset Using dplyr and ggplot2"
 author: "Hubert Luo"
 date: "February 22, 2018"
 output: github_document
@@ -16,39 +16,50 @@ dat <- read_csv('nba2017-players.csv')
 
 The following commands contain 3 components:
 1. Description of command
-2. Command with regular syntax
+2. Command with regular syntax 
 3. Command with piping syntax
+
+To reduce document size, only the command with piping syntax is knitted
 
 ```{r}
 #use slice() to subset the data by selecting the first 5 rows.
-slice(dat,1:5)
+#slice(dat,1:5)
 dat %>% slice(1:5)
+
 #use slice() to subset the data by selecting rows 10, 15, 20, ..., 50.
-slice(dat,2:10*5)
+#slice(dat,2:10*5)
 dat %>% slice(2:10*5)
+
 #use slice() to subset  the data by selecting the last 5 rows.
-slice(dat,(nrow(dat)-4):nrow(dat))
+#slice(dat,(nrow(dat)-4):nrow(dat))
 dat %>% slice(nrow(dat)-4:nrow(dat))
+
 #use filter() to subset those players with height less than 70 inches tall.
-filter(dat, height < 70)
+#filter(dat, height < 70)
 dat %>% filter(height < 70)
+
 #use filter() to subset rows of Toronto Raptors ('TOR').
-filter(dat, team == "TOR")
+#filter(dat, team == "TOR")
 dat %>% filter(team == "TOR")
+
 #use filter() to subset rows of TOR centers ('C').
-filter(dat, team == "TOR" & position == "C")
+#filter(dat, team == "TOR" & position == "C")
 dat %>% filter(team == "TOR" & position == "C")
+
 #use filter() and then select(), to subset rows of lakers ('LAL'), and then display their names.
-select(filter(dat, team == "LAL"),player)
+#select(filter(dat, team == "LAL"),player)
 dat %>% filter(team == "LAL") %>% select(player)
+
 #use filter() and then select(), to display the name and salary, of TOR point guards
-select(filter(dat, team == "TOR" & position == "PG"), player, salary)
+#select(filter(dat, team == "TOR" & position == "PG"), player, salary)
 dat %>% filter(team == "TOR" & position == "PG") %>%  select(player, salary)
+
 #select the name, age, and team, of players with more than 10 years of experience, making 10 million dollars or less.
-select(filter(dat, experience > 10 & salary <= 10e6), player, age, team)
+#select(filter(dat, experience > 10 & salary <= 10e6), player, age, team)
 dat %>% filter(experience > 10 & salary <= 10e6) %>% select(player, age, team)
+
 #select the name, team, height, and weight, of rookie players, 20 years old, displaying only the first five occurrences (i.e. rows)
-slice(select(filter(dat, experience == 0 & age == 20), player, team, height, weight),1:5)
+#slice(select(filter(dat, experience == 0 & age == 20), player, team, height, weight),1:5)
 dat %>% filter(experience == 0 & age == 20) %>% select(player, team, height,weight) %>% slice(1:5)
 ```
 
@@ -74,20 +85,21 @@ tor %>% mutate(product = height*weight) %>% arrange(product) %>% select(player,p
 tor3 = mutate(tor, log_height = log(height), log_weight = log(weight))
 
 #use the original data frame to filter() and arrange() those players with height less than 71 inches tall, in increasing order.
-arrange(filter(dat, height < 71),height)
+#arrange(filter(dat, height < 71),height)
 dat %>% filter(height < 71) %>% arrange(height)
 
 #display the name, team, and salary, of the top-5 highest paid players
-select(slice(arrange(dat, desc(salary)),1:5),c(player, team, salary))
+#select(slice(arrange(dat, desc(salary)),1:5),c(player, team, salary))
 dat %>% arrange(desc(salary)) %>% slice(1:5) %>% select(player, team, salary)
 
 #display the name, team, and points3, of the top 10 three-point players
-select(slice(arrange(dat, desc(points3)),1:10),c(player, team, points3))
+#select(slice(arrange(dat, desc(points3)),1:10),c(player, team, points3))
 dat %>% arrange(desc(points3)) %>% slice(1:10) %>% select(player, team, points3)
 
-#create a data frame gsw_mpg of GSW players, that contains variables for player name, experience, and min_per_game (minutes per game), sorted by min_per_game (in descending order)
-gsw_mpg = arrange(select(mutate(filter(dat,team=="GSW"),min_per_game = minutes/games),c(player, experience, min_per_game)),desc(min_per_game))
-gsw_mpg
+#create a data frame tor_mpg of Toronto Raptors players, that contains variables for player name, experience, and min_per_game (minutes per game), sorted by min_per_game (in descending order)
+#tor_mpg = arrange(select(mutate(filter(dat,team=="TOR"),min_per_game = minutes/games),c(player, experience, min_per_game)),desc(min_per_game))
+tor_mpg = dat %>% filter(team=='TOR') %>% mutate(min_per_game = minutes/games) %>% select(player, experience, min_per_game) %>% arrange(desc(min_per_game))
+tor_mpg
 ```
 
 ###Summarizing values with summarise and Grouped Operations
@@ -103,15 +115,15 @@ summarise(dat,max_height = max(height))
 summarise(dat,sd_3pt = sd(points3))
 
 #use summarise() and group_by() to display the median of three-points, by team.
-summarise(group_by(dat, team),median_3pt = median(points3))
+#summarise(group_by(dat, team),median_3pt = median(points3))
 dat %>% group_by(team) %>% summarise(median_3pt = median(points3))
 
 #display the average triple points by team, in ascending order, of the bottom-5 teams (worst 3pointer teams)
-slice(arrange(summarise(group_by(dat,team),average_3pt = mean(points3)),average_3pt),1:5)
+#slice(arrange(summarise(group_by(dat,team),average_3pt = mean(points3)),average_3pt),1:5)
 dat %>% group_by(team) %>% summarise(average_3pt = mean(points3)) %>% arrange(average_3pt) %>% slice(1:5)
 
 #obtain the mean and standard deviation of age, for Power Forwards, with 5 and 10 years (including) years of experience.
-summarise(filter(dat, position =="PF" & experience>=5 & experience <= 10),average_age = mean(age), sd_age = sd(age))
+#summarise(filter(dat, position =="PF" & experience>=5 & experience <= 10),average_age = mean(age), sd_age = sd(age))
 dat %>% filter(position == "PF" & experience >= 5 & experience <= 10) %>% summarise(average_age = mean(age), sd_age = sd(age))
 ```
 
@@ -119,96 +131,96 @@ dat %>% filter(position == "PF" & experience >= 5 & experience <= 10) %>% summar
 
 ```{r}
 #Display those rows associated to players having height less than 70 inches tall.
-show(dat[dat$height<70,])
+#show(dat[dat$height<70,])
 dat %>% filter(height < 70)
 
 #Display the names and salaries of centres with over 10 years of playing experience
-show(dat[dat$position=='C' & dat$experience > 10,c('player','salary')])
+#show(dat[dat$position=='C' & dat$experience > 10,c('player','salary')])
 dat %>% filter(position == 'C' & experience > 10) %>% select(player, salary)
 
 #Create a data frame UCLA with the data of players from college UCLA ("University of California, Los Angeles").
-ucla <- data.frame(dat[dat$college == "University of California, Los Angeles",])
+#ucla <- data.frame(dat[dat$college == "University of California, Los Angeles",])
 ucla <- dat%>%filter(college == "University of California, Los Angeles")
 
 #Create a data frame rookies with those players with 0 years of experience.
-rookies <- data.frame(dat[dat$experience == 0,])
+#rookies <- data.frame(dat[dat$experience == 0,])
 rookies <- dat%>%filter(experience==0)
 
 #Create a data frame rookie_centers with the data of Center rookie players.
-rookie_centres <- data.frame(rookies[rookies$position == 'C',])
+#rookie_centres <- data.frame(rookies[rookies$position == 'C',])
 rookie_centres <- rookies%>%filter(position=='C')
 
 #Create a data frame top_players for players with more than 50 games and more than 300 minutes played.
-top_players <- dat[(dat$games > 50) & (dat$minutes > 300),]
+#top_players <- dat[(dat$games > 50) & (dat$minutes > 300),]
 top_players <- dat%>%filter(games>50 & minutes > 300)
 
 #What's the largest height value?
-max(dat$height)
+#max(dat$height)
 dat %>% summarise(max(height))
 
 #What's the minimum height value?
-min(dat$height)
+#min(dat$height)
 dat %>% summarise(min(height))
 
 #What's the overall average height?
-mean(dat$height)
+#mean(dat$height)
 dat %>% summarise(mean(height))
 
 #Who is the tallest player?
-dat[dat$height == max(dat$height),'player']
+#dat[dat$height == max(dat$height),'player']
 dat %>% arrange(desc(height)) %>% select(player) %>% slice(1)
 
 #Who is the shortest player?
-dat[dat$height == min(dat$height),'player']
+#dat[dat$height == min(dat$height),'player']
 dat %>% arrange(height) %>% select(player) %>% slice(1)
 
 #Which are the unique teams?
-unique(dat$team)
+#unique(dat$team)
 dat %>% distinct(team)
 
 #How many different teams?
-length(unique(dat$team))
+#length(unique(dat$team))
 dat %>% distinct(team) %>% nrow
 
 #Who is the oldest player?
-dat[dat$age == max(dat$age),'player']
+#dat[dat$age == max(dat$age),'player']
 dat %>% arrange(desc(age)) %>%  select(player) %>% slice(1)
 
 #What is the median salary of all players?
-median(dat$salary)
+#median(dat$salary)
 dat %>% summarise(median(salary))
 
 #What is the median salary of the players with 10 years of experience or more?
-median(dat[dat$experience >= 10, 'salary'][[1]])
+#median(dat[dat$experience >= 10, 'salary'][[1]])
 dat %>% filter(experience >= 10) %>% summarise(median(salary))
   
 #What is the median salary of Shooting Guards (SG) and Point Guards (PG)?
-median(dat[(dat$position == 'PG') | (dat$position == 'SG'),'salary'][[1]])
+#median(dat[(dat$position == 'PG') | (dat$position == 'SG'),'salary'][[1]])
 dat %>% filter(position == 'PG' | position == 'SG') %>% summarise(median(salary))
 
 #What is the median salary of Power Forwards (PF), 29 years or older, and 74 inches tall or less?
-median(dat[(dat$position == 'PF') & (dat$age >= 29) & (dat$height <= 74),'salary'][[1]])
+#median(dat[(dat$position == 'PF') & (dat$age >= 29) & (dat$height <= 74),'salary'][[1]])
 dat %>% filter(position == 'PG' & age >= 29 & height <= 74) %>% summarise(median(salary))
 
 #How many players are from "University of California, Berkeley"?
-nrow(na.omit(dat[dat$college == "University of California, Berkeley",]))
+#nrow(na.omit(dat[dat$college == "University of California, Berkeley",]))
 dat %>% filter(college == "University of California, Berkeley") %>% nrow
 
 #Are there any players with weight greater than 260 pounds? If so how many and who are they?
-nrow(dat[dat$weight > 260,])
-dat[dat$weight > 260,'player']
+#nrow(dat[dat$weight > 260,])
+#dat[dat$weight > 260,'player']
 dat %>% filter(weight > 260) %>% select('player')
 
 #How many players did not attend a college in the US?
-nrow(dat[is.na(dat$college),])
+#nrow(dat[is.na(dat$college),])
 dat %>% filter(is.na(college)) %>% nrow
 
 #Who is the player with the maximum rate of points per minute?
-dat[dat$points/dat$minutes == max(dat$points/dat$minutes),'player']
+#dat[dat$points/dat$minutes == max(dat$points/dat$minutes),'player']
 dat %>% arrange(desc(points/minutes)) %>% select(player) %>% slice(1)
 
 #Who is the player with the maximum rate of 3 pointers per minute?
-dat[dat$points3/dat$minutes == max(dat$points3/dat$minutes),'player']
+#dat[dat$points3/dat$minutes == max(dat$points3/dat$minutes),'player']
 dat %>% arrange(desc(points3/minutes)) %>% select(player) %>% slice(1)
 ```
 
@@ -216,28 +228,28 @@ dat %>% arrange(desc(points3/minutes)) %>% select(player) %>% slice(1)
 
 ```{r}
 #Create a data frame with the average height, average weight, and average age, grouped by position
-aggregate(dat[,c("height","weight","age")],by = list(dat$age),FUN = mean)
+#aggregate(dat[,c("height","weight","age")],by = list(dat$age),FUN = mean)
 dat %>% group_by(position) %>% summarise(mean(height),mean(weight),mean(age))
 
 #Create a data frame with the average height, average weight, and average age, grouped by team
-aggregate(dat[,c("height","weight","age")],by = list(dat$team),FUN = mean)
+#aggregate(dat[,c("height","weight","age")],by = list(dat$team),FUN = mean)
 dat %>% group_by(team) %>% summarise(mean(height),mean(weight),mean(age))
 
 #Create a data frame with the average height, average weight, and average age, grouped by team and position.
-aggregate(dat[,c("height","weight","age")],by = list(dat$team, dat$position),FUN = mean)
+#aggregate(dat[,c("height","weight","age")],by = list(dat$team, dat$position),FUN = mean)
 dat %>% group_by(position, team) %>% summarise(mean(height),mean(weight),mean(age))
 
 #Create a data frame with the minimum salary, median salary, mean salary, and maximum salary, grouped by team and position.
-nba_summary <- data.frame(aggregate(dat[,c("salary")],by = list(dat$team, dat$position),FUN = min), 
-           aggregate(dat[,c("salary")],by = list(dat$team, dat$position),FUN = median),
-           aggregate(dat[,c("salary")],by = list(dat$team, dat$position),FUN = mean),
-           aggregate(dat[,c("salary")],by = list(dat$team, dat$position),FUN = max))[,c(1,2,3,6,9,12)]
-colnames(nba_summary) <- c("Team","Position","Min Salary", "Median Salary", "Mean Salary", "Max Salary")
-nba_summary
+#nba_summary <- data.frame(aggregate(dat[,c("salary")],by = list(dat$team, dat$position),FUN = min), 
+#           aggregate(dat[,c("salary")],by = list(dat$team, dat$position),FUN = median),
+#           aggregate(dat[,c("salary")],by = list(dat$team, dat$position),FUN = mean),
+#           aggregate(dat[,c("salary")],by = list(dat$team, dat$position),FUN = max))[,c(1,2,3,6,9,12)]
+#colnames(nba_summary) <- c("Team","Position","Min Salary", "Median Salary", "Mean Salary", "Max Salary")
+#nba_summary
 dat %>% group_by(position, team) %>% summarise(min(salary),median(salary),mean(salary),max(salary))
 ```
 
-###Visualizations with ggplot
+###Visualizations with ggplot2
 
 ```{r scatterplot}
 # scatterplot (option 1)
@@ -268,7 +280,7 @@ ggplot(data = dat, aes(x = points, y = salary)) +
   geom_point(aes(color = position, size = points3), alpha = 0.7)
 ```
 
-```{r gsw_scatterplot}
+```{r tor_scatterplot}
 #Use the data frame tor to make a scatterplot of height and weight.
 ggplot(data = tor, aes(x = height, y = weight)) +
   geom_point()
