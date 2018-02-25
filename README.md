@@ -5,8 +5,8 @@ Principal Component Analysis, Bootstrap/Jackknife Resampling, Random Sampling Si
 
 ## Scripts
 
-- [Principal Cmponent Analysis](nba_eda.md)
-- [Bootstrap Resampling](nba_boostrap.md)
+- [Principal Cmponent Analysis](nba_pca.md)
+- [Bootstrap Resampling](nba_bootstrap.md)
 - [Jackknife Resampling](nba_jackknife.md)
 - [Exploratory Data Analysis Part 2 (with dplyr/ggplot2)](nba_eda2.md)
 - [Exploratory Data Analysis Part 1](nba_eda.md)
