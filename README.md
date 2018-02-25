@@ -3,7 +3,7 @@ Principal Component Analysis, Bootstrap/Jackknife Resampling, Random Sampling Si
 
 -----
 
-##Scripts
+## Scripts
 
 - [Principal Cmponent Analysis](nba_eda.md)
 - [Bootstrap Resampling](nba_boostrap.md)
@@ -13,7 +13,7 @@ Principal Component Analysis, Bootstrap/Jackknife Resampling, Random Sampling Si
 
 -----
 
-##Packages Used
+## Packages Used
 
 - ggplot2
 - dplyr
@@ -23,6 +23,6 @@ Principal Component Analysis, Bootstrap/Jackknife Resampling, Random Sampling Si
 
 -----
 
-##Data
+## Data
 
 - [NBA 2016-17 Season Players Dataset](nba2017-players.csv)
