@@ -918,3 +918,10 @@ ggplot(data = dat, aes(x = weight, y = height)) +
 ```
 
 ![](nba_eda2_files/figure-markdown_github/facet2_scatterplot-1.png)
+
+``` r
+dat %>% filter(position %in% c('PG','SG')) %>% ggplot(aes(x=height, fill = position)) +
+  geom_density(alpha = 0.5)
+```
+
+![](nba_eda2_files/figure-markdown_github/density-1.png)

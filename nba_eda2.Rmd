@@ -299,3 +299,8 @@ ggplot(data = dat, aes(x = weight, y = height)) +
   geom_density2d() +
   theme_minimal()
 ```
+
+```{r density}
+dat %>% filter(position %in% c('PG','SG')) %>% ggplot(aes(x=height, fill = position)) +
+  geom_density(alpha = 0.5)
+```
