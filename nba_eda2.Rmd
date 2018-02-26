@@ -196,7 +196,7 @@ dat %>% filter(experience >= 10) %>% summarise(median(salary))
   
 #What is the median salary of Shooting Guards (SG) and Point Guards (PG)?
 #median(dat[(dat$position == 'PG') | (dat$position == 'SG'),'salary'][[1]])
-dat %>% filter(position == 'PG' | position == 'SG') %>% summarise(median(salary))
+dat %>% filter(position %in% c('PG','SG')) %>% summarise(median(salary))
 
 #What is the median salary of Power Forwards (PF), 29 years or older, and 74 inches tall or less?
 #median(dat[(dat$position == 'PF') & (dat$age >= 29) & (dat$height <= 74),'salary'][[1]])

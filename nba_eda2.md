@@ -690,7 +690,7 @@ dat %>% filter(experience >= 10) %>% summarise(median(salary))
 ``` r
 #What is the median salary of Shooting Guards (SG) and Point Guards (PG)?
 #median(dat[(dat$position == 'PG') | (dat$position == 'SG'),'salary'][[1]])
-dat %>% filter(position == 'PG' | position == 'SG') %>% summarise(median(salary))
+dat %>% filter(position %in% c('PG','SG')) %>% summarise(median(salary))
 ```
 
     ## # A tibble: 1 x 1
