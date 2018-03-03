@@ -1,0 +1,11 @@
+"player","team","position","height","weight","age","experience","college","salary","games","minutes","points","points3","points2","points1"
+"Al Horford","BOS","C",82,245,30,9,"University of Florida",26540100,68,2193,952,86,293,108
+"Amir Johnson","BOS","PF",81,240,29,11,"",1.2e+07,80,1608,520,27,186,67
+"Avery Bradley","BOS","SG",74,180,26,6,"University of Texas at Austin",8269663,55,1835,894,108,251,68
+"Demetrius Jackson","BOS","PG",73,201,22,0,"University of Notre Dame",1450000,5,17,10,1,2,3
+"Gerald Green","BOS","SF",79,205,31,9,"",1410598,47,538,262,39,56,33
+"Isaiah Thomas","BOS","PG",69,185,27,5,"University of Washington",6587132,76,2569,2199,245,437,590
+"Jae Crowder","BOS","SF",78,235,26,4,"Marquette University",6286408,72,2335,999,157,176,176
+"James Young","BOS","SG",78,215,21,2,"University of Kentucky",1825200,29,220,68,12,13,6
+"Jaylen Brown","BOS","SF",79,225,20,0,"University of California",4743000,78,1341,515,46,146,85
+"Jonas Jerebko","BOS","PF",82,231,29,6,"",5e+06,78,1232,299,45,69,26
